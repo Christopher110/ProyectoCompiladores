@@ -1,9 +1,13 @@
 import './App.css';
-import swal from 'sweetalert';
 import './estilosParaComponentes.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import FileUploader from './componentesApp/codificacion';
+import AceEditor from 'react-ace';
+import "ace-builds/src-noconflict/mode-csharp";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/ext-language_tools";
+//import './assets/chefbims.jc';
 
 function App() {
   const [fileContent, setFileContent] = useState('');
@@ -11,10 +15,6 @@ function App() {
   const onFileUpload = (fileContent) => {
     setFileContent(fileContent);
   };
-
-  function funcionPrueba(){
-    swal("Completado","El archivo se cargo correctamente","success");
-  }
 
   return ( 
   <>
@@ -25,16 +25,30 @@ function App() {
     
         <div className="superior" style={{padding: 0, margin: 0}}>
             <h1 style={{color:"white"}}>Area de codigo</h1>
-            <textarea className="responsive-textarea" value={fileContent} readOnly={false}>Ingresar texto</textarea>
+            <AceEditor
+                    mode="csharp" // Lenguaje de programación
+                    theme="monokai" // Tema del editor
+                    onChange={onFileUpload} // Función para manejar cambios en el código
+                    value={fileContent} // Valor del código en el editor
+                    editorProps={{ $blockScrolling: true, }} // Propiedades del editor
+                    fontSize={17}
+                    style={{ width: '100%', height: '80%'}} // Estilo del editor
+                    setOptions={{
+                      enableBasicAutocompletion: true,
+                      enableLiveAutocompletion: true,
+                      enableSnippets: true
+                    }}
+            />
         </div>
     
         <div className="inferior-izquierda">
           <h1 style={{color:"white"}}>Tabla Errores</h1>
-          <button className="btn btn-primary" style={{backgroundColor:"black", borderLeftColor:"gray", borderRightColor:"gray", borderTopColor:"gray", borderBottomColor:"gray"}}>test</button>
+          <button>Ejecutar</button>
         </div>
 
         <div className="inferior-derecha" style={{padding: 0, margin: 0}}>
           <h1 style={{color:"white"}}>Tabla de Tokens</h1>
+          <button>Ejecutar</button>
         </div>
     </div>
   </>

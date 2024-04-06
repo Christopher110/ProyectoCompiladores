@@ -25,7 +25,7 @@
   height: 25%;
   bottom: 0;
   right: 0;
-  background: linear-gradient(90deg, rgba(88,88,88,1) 0%, rgba(40,40,50,1) 52%, rgba(0,0,0,1) 100%);
+  background: transparent; /* Cambia el color de fondo a transparente */
   background-color: black;
 }
 
