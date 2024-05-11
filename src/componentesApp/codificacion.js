@@ -29,9 +29,13 @@ const FileUploader = ({ onFileUpload }) => {
     };
 
     return (
-        <div>
-            <input type="file" onChange={handleFileChange} style={{color:"white"}}/>
-            <button onClick={handleUpload} class="btn btn-primary" style={{backgroundColor:"black", borderLeftColor:"gray", borderRightColor:"gray", borderTopColor:"gray", borderBottomColor:"gray"}}>Subir archivo</button>
+        <div style={{display:"flex", justifyContent:"space-between", alignContent:"center"}}>
+            <img src="logotutotest.png" width={"200px"} className="invertir-color-imagen"></img>
+
+            <div style={{display: "flex", justifyContent: "right", alignContent: "right"}}>
+                <input type="file" onChange={handleFileChange} style={{color:"white", paddingRight: "80px", fontSize: "17px"}}/>
+                <button onClick={handleUpload} class="btn btn-primary" style={{height: "40px"}}>Subir archivo</button>
+            </div>
         </div>
     );
 };

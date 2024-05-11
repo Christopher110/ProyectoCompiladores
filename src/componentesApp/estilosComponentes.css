@@ -8,3 +8,7 @@
     height: 100%;
     align-content: center;
 }
+
+.invertir-color-imagen{
+    filter: invert(100%);
+}
