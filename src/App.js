@@ -3,13 +3,12 @@ import './estilosParaComponentes.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useRef, useState } from 'react';
 import FileUploader from './componentesApp/codificacion';
-import {validarTexto} from './componentesApp/funcionValidador'
 import AceEditor from 'react-ace';
 import "ace-builds/src-noconflict/mode-csharp";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
 import { Container } from 'react-bootstrap';
-//import './assets/chefbims.jc';
+//import './assets/tuto+';
 
 function App() {
   const [fileContent, setFileContent] = useState('');
@@ -17,39 +16,72 @@ function App() {
   const [erroresLexicos, setErroresLexicos] = useState([]); // Agregando estado para errores léxicos
   const editorRef = useRef(null);
 
-
   const onFileUpload = (fileContent) => {
     setFileContent(fileContent);
-  };
+  };  
+    
+  // Definir expresiones regulares para diferentes tipos de tokens
+  var T_AlcVariables = /\b(Libro|Cuaderno)\b/gi;
+  var T_Variables = /\b(Hoja|Borrador|Estuche|Separador|Grapa|Resaltador|Silicon)\b/gi;
+  var T_Impinfo = /\b(Canonera|Pizarron)\b/gi;
+  var T_ModificadorPu = /\b(Tarea)\b/gi;
+  var T_ModificadorPr = /\b(Bolson)\b/gi;
+  var T_ModificadorDe = /\b(China)\b/gi;
+  var T_ModificadoraPro = /\b(Lapiz)\b/gi;  
+  var T_PalabrasClave = /\b(Boligrafo|Etiqueta|Sello|Resaltador|Rotulador|Radio|Mouse|Ejercicio|Jabon|Extensión|Papel|Tableta|Gel|Grapadora|Acuarela|Pizarra|Nota|Algodon|Mapa|PapelCrepe|Tiza|PistolaSilicon|Plasticina|Pincel|Cartón|Folder)\b/gi;
+  var T_Sentencias = /\b(Rotulador|Postif|Sacapuntas|Pegamento|Calculadora)\b/gi;
+  var T_Operadores = /[+-/*]/g; // Operadores aritméticos
+  var T_Digitos = /\b[\d]+\b/g; // Dígitos del 0 al 9
+  var T_CaracteresEspeciales = /[!@#$%^&(),.?":{}|<>]/g;
+  var T_Comentario = /\/\/.*/g; // Comentario de una línea
+  var T_ComentarioMultiLinea = /\/\*[\s\S]*?\*\//g; // Comentario de varias líneas
+  var T_palabras = /\b(java|util|scanner|class|Documentocompiladores|static|main|system|out|Ingrese|in|el|primer|digito|num1|nextBorrador|segundo|num2|seleccione|la|operacion|a|realizar|suma|resta|division|multiplicacion|opcion|resultado|num2|num3|Error|numero|mayor|incorrecta|resultado|close|[0-9]|nextHoja|es|un|args)\b/gi;
+
+  function levenshteinDistance(a, b) {
+    const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+
+    for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+    for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+
+    for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+            if (a[i - 1] === b[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1;
+            }
+        }
+    }
+
+    return dp[a.length][b.length];
+  }
+
+  function calculaPorcentajeCoincidencia(patron, palabra){
+    const distancia = levenshteinDistance(patron, palabra);
+    const largoMaximo = Math.max(patron.length, palabra.length);
+    const porcentajeCoincidencia = ((largoMaximo - distancia) / largoMaximo) * 100;
+    return porcentajeCoincidencia
+  }
+
+  function validadorPalabra(patron, palabra){
+    const porcentajeMatch = calculaPorcentajeCoincidencia(patron, palabra);
+    return porcentajeMatch >= 95
+  }
 
   function validarTexto() {
     // Obtenemos el texto ingresado en el editor
     var texto = editorRef.current.editor.getValue();
-  
-    // Definir expresiones regulares para diferentes tipos de tokens
-    var T_AlcVariables = /\b(Libro|Cuaderno)\b/gi;
-    var T_Variables = /\b(Hoja|Borrador|Estuche|Separador|Grapa|Resaltador|Silicon)\b/gi;
-    var T_Impinfo = /\b(Canonera|Pizarron)\b/gi;
-    var T_ModificadorPu = /\b(Tarea)\b/gi;
-    var T_ModificadorPr = /\b(Bolson)\b/gi;
-    var T_ModificadorDe = /\b(China)\b/gi;
-    var T_ModificadoraPro = /\b(Lapiz)\b/gi;
-    var T_PalabrasClave = /\b(Boligrafo|Etiqueta|Sello|Resaltador|Rotulador|Radio|Mouse|Ejercicio|Jabon|Extensión|Papel|Tableta|Gel|Grapadora|Acuarela|Pizarra|Nota|Algodon|Mapa|PapelCrepe|Tiza|PistolaSilicon|Plasticina|Pincel|Cartón|Folder)\b/gi;
-    var T_Sentencias = /\b(Rotulador|Postif|Sacapuntas|Pegamento|Calculadora)\b/gi;
-    var T_Operadores = /[+-/*]/g; // Operadores aritméticos
-    var T_Digitos = /\b[0-9]+\b/g; // Dígitos del 0 al 9
-    var T_CaracteresEspeciales = /[!@#$%^&(),.?":{}|<>]/g;
-    var T_Comentario = /\/\/.*/g; // Comentario de una línea
-    var T_ComentarioMultiLinea = /\/\*[\s\S]*?\*\//g; // Comentario de varias líneas
-    var T_palabras = /\b(java|util|scanner|class|Documentocompiladores|static|main|system|out|Ingrese|in|el|primer|digito|num1|nextBorrador|segundo|num2|seleccione|la|operacion|a|realizar|suma|resta|division|multiplicacion|opcion|resultado|num2|num3|Error|numero|mayor|incorrecta|resultado|close|[0-9]|nextHoja|es|un|args)\b/gi;
+    
     // Array para almacenar los tokens encontrad
     var tokensEncontrados = [];
+    
     // Array para almacenar los errores encontrados
     var errores = [];
   
     // Función para agregar tokens encontrados al array
     function agregarTokens(regex, descripcion) {
       var match;
+      
       while ((match = regex.exec(texto)) !== null) {
         var valor = match[0];
         var inicio = match.index;
@@ -70,6 +102,7 @@ function App() {
     agregarTokens(T_ModificadoraPro, "T_Modificador Privado");
     agregarTokens(T_PalabrasClave, "T_Palabras Clave");
     agregarTokens(T_Sentencias, "T_Sentencias");
+    agregarTokens(T_Operadores, "T_Operadores");
     agregarTokens(T_Digitos, "T_Dígitos");
     agregarTokens(T_CaracteresEspeciales, "T_Caracteres Especiales");
     agregarTokens(T_Comentario, "T_Comentario");
@@ -84,6 +117,7 @@ function App() {
             !palabra.match(T_ModificadorPu) &&
             !palabra.match(T_ModificadorPr) &&
             !palabra.match(T_ModificadorDe) &&
+            !palabra.match(T_Digitos) &&
             !palabra.match(T_ModificadoraPro) &&
             !palabra.match(T_PalabrasClave) &&
             !palabra.match(T_palabras) &&
@@ -93,7 +127,10 @@ function App() {
     });
   
     // Retornar los tokens y errores encontrados en formato JSON
-    return { tokensEncontrados: tokensEncontrados, errores: errores };
+    return {
+      tokensEncontrados: tokensEncontrados,
+      errores: errores 
+    };
 }
 
 

@@ -1,10 +1,10 @@
-// ace.define("ace/mode/Eevee_highlight_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"], function (require, exports, module) {
+// ace.define("ace/mode/ttp_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"], function (require, exports, module) {
 //     "use strict";
 
 //     var oop = require("../lib/oop");
 //     var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
     
-//     var EeveeHighlightRules = function () {
+//     var ttpHighLightRules = function () {
 
 //         var keywords = (
 //             "cocinar, cortar, freir"
@@ -75,21 +75,21 @@
 //             ]
 //         };
 //     };
-//     oop.inherits(EeveeHighlightRules, TextHighlightRules);
+//     oop.inherits(ttpHighLightRules, TextHighlightRules);
 
-//     exports.EeveeHighlightRules = EeveeHighlightRules;
+//     exports.ttpHighLightRules = ttpHighLightRules;
 
 // });
 
-// ace.define("ace/mode/Eevee", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/mode/Eevee_highlight_rules"], function (require, exports, module) {
+// ace.define("ace/mode/ttp", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/mode/ttp_rules"], function (require, exports, module) {
 //     "use strict";
 
 //     var oop = require("../lib/oop");
 //     var TextMode = require("./text").Mode;
-//     var EeveeHighlightRules = require("./Eevee_highlight_rules").EeveeHighlightRules;
+//     var ttpHighLightRules = require("./ttp_rules").ttpHighLightRules;
 
 //     var Mode = function () {
-//         this.HighlightRules = EeveeHighlightRules;
+//         this.HighlightRules = ttpHighLightRules;
 //         this.$behaviour = this.$defaultBehaviour;
 //     };
 //     oop.inherits(Mode, TextMode);
@@ -98,14 +98,14 @@
 
 //         this.lineCommentStart = "*";
 
-//         this.$id = "ace/mode/Eevee";
+//         this.$id = "ace/mode/ttp";
 //     }).call(Mode.prototype);
 //     exports.Mode = Mode;
 
 // }); 
 
 // (function () {
-//     ace.require(["ace/mode/Eevee"], function (m) {
+//     ace.require(["ace/mode/ttp"], function (m) {
 //         if (typeof module == "object" && typeof exports == "object" && module) {
 //             module.exports = m;
 //         }
